@@ -22,7 +22,7 @@ export async function createUser(user: RegisterForm) {
 }
 
 export async function getOtherUsers(userId: string) {
-    return prisma.user.findMany({
+    return await prisma.user.findMany({
         where: { id: { not: userId } },
         orderBy: {
             profile: {
@@ -30,4 +30,8 @@ export async function getOtherUsers(userId: string) {
             },
         },
     })
+}
+
+export async function getUserById(userId: string) {
+    return await prisma.user.findUnique({ where: { id: userId } })
 }

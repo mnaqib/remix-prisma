@@ -17,9 +17,54 @@ model User {
   email String @unique
   password String
   profile Profile
+
+  //kudos
+  authoredKudos Kudo[] @relation("AuthoredKudos")
+  kudos Kudo[] @relation("ReceivedKudos")
 }
 
 type Profile {
   firstName String
   lastName String
+}
+
+enum Emoji {
+  THUMBSUP
+  PARTY
+  HANDSUP
+}
+
+enum Department {
+  MARKETING
+  SALES
+  ENGINEERING
+  HR
+}
+
+enum Color {
+  RED
+  GREEN
+  YELLOW
+  BLUE
+  WHITE
+}
+
+type KudoStyle {
+  background Color @default(YELLOW)
+  textColor Color @default(WHITE)
+  emoji Emoji @default(THUMBSUP)
+}
+
+model Kudo {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  message String
+  createdAt DateTime @default(now())
+  style KudoStyle?
+
+  //user details
+  author User @relation(references: [id], fields: [authorId], "AuthoredKudos")
+  authorId String @db.ObjectId
+
+  recipient User @relation(references: [id], fields: [recipientId], "ReceivedKudos")
+  recipientId String @db.ObjectId
 }
