@@ -23,9 +23,31 @@ model User {
   kudos Kudo[] @relation("ReceivedKudos")
 }
 
+model Kudo {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  message String
+  createdAt DateTime @default(now())
+  style KudoStyle?
+
+  //user details
+  author User @relation(references: [id], fields: [authorId], onDelete: Cascade, "AuthoredKudos")
+  authorId String @db.ObjectId
+
+  recipient User @relation(references: [id], fields: [recipientId], onDelete: Cascade, "ReceivedKudos")
+  recipientId String @db.ObjectId
+}
+
 type Profile {
   firstName String
   lastName String
+  department Department? @default(MARKETING)
+  profilePicture String? @default("")
+}
+
+type KudoStyle {
+  background Color @default(YELLOW)
+  textColor Color @default(WHITE)
+  emoji Emoji @default(THUMBSUP)
 }
 
 enum Emoji {
@@ -49,22 +71,5 @@ enum Color {
   WHITE
 }
 
-type KudoStyle {
-  background Color @default(YELLOW)
-  textColor Color @default(WHITE)
-  emoji Emoji @default(THUMBSUP)
-}
 
-model Kudo {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  message String
-  createdAt DateTime @default(now())
-  style KudoStyle?
 
-  //user details
-  author User @relation(references: [id], fields: [authorId], "AuthoredKudos")
-  authorId String @db.ObjectId
-
-  recipient User @relation(references: [id], fields: [recipientId], "ReceivedKudos")
-  recipientId String @db.ObjectId
-}

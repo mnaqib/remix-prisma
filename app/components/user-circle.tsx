@@ -7,7 +7,7 @@ interface IProps {
 }
 
 export function UserCircle({
-    profile: { firstName, lastName },
+    profile: { firstName, lastName, profilePicture },
     onClick = () => {},
     className = '',
 }: IProps) {
@@ -15,11 +15,19 @@ export function UserCircle({
         <div
             className={`${className} cursor-pointer bg-gray-400 rounded-full flex justify-center items-center`}
             onClick={onClick}
+            style={{
+                backgroundSize: 'cover',
+                ...(profilePicture
+                    ? { backgroundImage: `url(${profilePicture})` }
+                    : {}),
+            }}
         >
-            <h2>
-                {firstName.charAt(0).toUpperCase()}
-                {lastName.charAt(0).toUpperCase()}
-            </h2>
+            {!profilePicture && (
+                <h2>
+                    {firstName.charAt(0).toUpperCase()}
+                    {lastName.charAt(0).toUpperCase()}
+                </h2>
+            )}
         </div>
     )
 }
